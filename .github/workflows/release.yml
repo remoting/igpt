@@ -1,0 +1,73 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'   # 例如，匹配 v1.0.0, v1.1.1 等版本标签
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: BUILD
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+
+  build:
+    runs-on: ${{ matrix.os }}
+    needs: release  # 确保 release job 先执行完成
+    environment: BUILD
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        arch: [ amd64, arm64 ]
+        include:
+          - os: ubuntu-latest
+            goos: linux
+          - os: macos-latest
+            goos: darwin
+          - os: windows-latest
+            goos: windows
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+ 
+    - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+
+    - name: install Rust stable
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+
+    - uses: JonasKruckenberg/tauri-build@v1
+      id: tauri_build
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.release.outputs.upload_url }}
+        asset_path: ./output/iupload_${{ matrix.goos }}_${{ matrix.arch }}${{ runner.os == 'Windows' && '.exe' || '' }}
+        asset_name: iupload_${{ matrix.goos }}_${{ matrix.arch }}${{ runner.os == 'Windows' && '.exe' || '' }}
+        asset_content_type: application/octet-stream
