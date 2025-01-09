@@ -1,6 +1,8 @@
 use std::error::Error;
 use tauri::menu::{CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder};
-use tauri::{App, TitleBarStyle, WebviewUrl, WebviewWindowBuilder};
+use tauri::{App, WebviewUrl, WebviewWindowBuilder};
+
+use crate::util::env;
 pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
     let handle = app.handle();
     let toggle = MenuItemBuilder::with_id("toggle", "Toggle").build(app)?;
@@ -11,10 +13,18 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         .build()?;
 
     app.set_menu(menu)?;
+ 
+
+    let init_script = format!(r#"
+        window.__LY_SDK__ = {{ platform: '{}', arch: '{}' }};
+    "#, env::get_plaform(), env::get_arch());
+
 
     let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .inner_size(800.0, 600.0)
+        .initialization_script(&init_script)
         .title("");
+    let window = win_builder.build().unwrap();
     //.decorations(false);
 
     #[cfg(target_os = "macos")]
@@ -22,7 +32,6 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         use cocoa::appkit::{NSColor, NSWindow};
         use cocoa::base::YES;
         use cocoa::base::{id, nil};
-        let window = win_builder.build().unwrap();
         let ns_window = window.ns_window().unwrap() as id;
         unsafe {
             ns_window.setTitlebarAppearsTransparent_(YES);

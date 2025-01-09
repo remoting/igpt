@@ -59,3 +59,17 @@ pub fn get_logs_dir() -> String {
     }
     return logs_dir.to_string_lossy().to_string();
 }
+
+pub fn get_plaform() -> String {
+    let platform = match std::env::consts::OS {
+        "windows" => "Windows",
+        "macos" => "macOS",
+        "linux" => "Linux",
+        other => other, // 处理其他平台
+    };
+    return platform.to_string();
+}
+pub fn get_arch() -> String {
+    let arch = std::env::consts::ARCH;
+    return arch.to_string();
+} 

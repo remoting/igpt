@@ -10,24 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    environment: BUILD
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-
   build:
     strategy:
       fail-fast: false
@@ -42,7 +24,6 @@ jobs:
           - platform: "windows-latest"
             args: ""
     runs-on: ${{ matrix.platform }}
-    needs: release  # 确保 release job 先执行完成
     environment: BUILD
     steps:
     - name: Checkout repository
@@ -69,7 +50,7 @@ jobs:
 
     - uses: tauri-apps/tauri-action@v0
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
       with:
         tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
         releaseName: "App v__VERSION__"
@@ -77,14 +58,3 @@ jobs:
         releaseDraft: true
         prerelease: false
         args: ${{ matrix.args }}
-        
-    # - name: Upload Release Asset
-    #   id: upload-release-asset
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ needs.release.outputs.upload_url }}
-    #     asset_path: ./output/iupload_${{ matrix.goos }}_${{ matrix.arch }}${{ runner.os == 'Windows' && '.exe' || '' }}
-    #     asset_name: iupload_${{ matrix.goos }}_${{ matrix.arch }}${{ runner.os == 'Windows' && '.exe' || '' }}
-    #     asset_content_type: application/octet-stream
