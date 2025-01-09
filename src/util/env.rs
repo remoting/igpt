@@ -73,3 +73,7 @@ pub fn get_arch() -> String {
     let arch = std::env::consts::ARCH;
     return arch.to_string();
 } 
+pub fn get_version() -> String {
+    let version = env!("CARGO_PKG_VERSION");
+    return version.to_string();
+}
