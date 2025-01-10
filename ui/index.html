@@ -102,9 +102,28 @@
             }
         }
     </style>
+    <script type="module">
+        async function invoke(cmd, args = {}, options) {
+            return window.__TAURI_INTERNALS__.invoke(cmd, args, options);
+        }
+        function start_dragging(){
+            invoke('plugin:window|start_dragging', {
+                label: "main"
+            });
+        }
+        function document_ready(){
+            window.__TAURI_INTERNALS__.invoke("ui_version").then((version) => {
+                window.location.href = "keeyuu://localhost/" + version + "/"
+            }).catch(e => {
+                document.getElementById("preloader").innerHTML = "error:"+e
+                document.getElementById("preloader").style.color = "red"
+            });
+        }
+        document.addEventListener("DOMContentLoaded", document_ready);
+    </script>
 </head>
 
-<body class="ly-no-select">
+<body class="ly-no-select" onmousedown="start_dragging">
     <div id="preloader">
         <div class="jumper">
             <div></div>
@@ -112,14 +131,6 @@
             <div></div>
         </div>
     </div>
-    <script>
-        window.__TAURI_INTERNALS__.invoke("ui_version").then((version) => {
-            window.location.href = "keeyuu://localhost/" + version + "/"
-        }).catch(e => {
-            document.getElementById("preloader").innerHTML = "error:"+e
-            document.getElementById("preloader").style.color = "red"
-        });
-    </script>
 </body>
 
 </html>
