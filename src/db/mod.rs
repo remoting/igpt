@@ -1,4 +1,4 @@
-mod sqlite;
+pub mod sqlite;
 mod migrate;
 use crate::util::json::Json;
 use serde_json::{Value,json};

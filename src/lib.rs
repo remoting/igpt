@@ -32,7 +32,8 @@ pub fn run() {
             db::sqlite_query,
             log::log4rs_info,
             log::log4rs_warn,
-            res::ui_version,
+            res::app_version,
+            res::app_upgrade
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

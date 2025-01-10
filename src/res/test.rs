@@ -3,6 +3,8 @@
 mod tests {
     use std::path::PathBuf;
 
+    use crate::res::app_version_upgrade;
+
     // 导入父模块的所有项，使得测试模块可以访问它们
     use super::*;
     // 一个简单的测试函数
@@ -15,6 +17,10 @@ mod tests {
             path.push("index.html");
         }
         println!("x{}x",path.to_str().unwrap_or("")); 
+    }
+    #[test]
+    fn test_upgrade() -> Result<(), crate::util::error::Error> {
+        app_version_upgrade("v1.0.0", "https://www.keeyuu.com/version/v1.0.0.zip")
     }
  
 }

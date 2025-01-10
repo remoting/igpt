@@ -31,6 +31,7 @@ pub fn document_dir() -> PathBuf {
                     // 检查是否是 mobile，如果不是，则在 doc_dir 后面添加 "igpt"
                     #[cfg(not(mobile))]
                     {
+                        let version = env!("CARGO_PKG_VERSION");
                         doc_dir = doc_dir.join("igpt");
                     }
                     if !doc_dir.exists() {
@@ -58,6 +59,18 @@ pub fn get_logs_dir() -> String {
         }
     }
     return logs_dir.to_string_lossy().to_string();
+}
+pub fn get_temp_dir() -> String {
+    let doc_dir = document_dir();
+
+    let temp_dir = doc_dir.join("temp");
+    // 检查 logs 目录是否存在，如果不存在则创建
+    if !temp_dir.exists() {
+        if let Err(e) = fs::create_dir_all(&temp_dir) {
+            eprintln!("无法创建 logs 目录: {}", e);
+        }
+    }
+    return temp_dir.to_string_lossy().to_string();
 }
 
 pub fn get_plaform() -> String {

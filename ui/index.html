@@ -25,6 +25,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            color: red;
         }
 
         #preloader {
@@ -49,6 +50,16 @@
             margin: auto;
             width: 50px;
             height: 50px;
+        }
+        #preloader .text {
+            color: black;
+            position: absolute;
+            top: calc(50% - 75px);
+            width: 100%;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #preloader .jumper>div {
@@ -119,16 +130,33 @@
                 label: "main"
             });
         }
+        function start(version){
+            window.location.href = "keeyuu://localhost/" + version + "/"
+        }
         function on_error(e){
             document.getElementById("preloader").innerHTML = "<div class='ly-on-error'><pre>"+e+"<pre></div>"
-            document.getElementById("preloader").style.color = "red"
+        }
+        function on_init(){
+            document.getElementById("preloader").querySelector(".text").innerHTML = "正在初始化 ..."
+            window.__TAURI_INTERNALS__.invoke('app_upgrade', {
+                version: "v1.0.0",
+                url: "https://xxx.xxx.xxx/xxx/xxx.zip"
+            }).then((version)=>{
+                start(version)
+            }).catch(e=>{
+                on_error(e)
+            });
         }
         function document_ready(){
             try{
-                window.__TAURI_INTERNALS__.invoke("ui_version").then((version) => {
-                    window.location.href = "keeyuu://localhost/" + version + "/"
+                window.__TAURI_INTERNALS__.invoke("app_version").then((version) => {
+                    start(version)
                 }).catch(e => {
-                    on_error(e)
+                    if (e.code != null && e.code === 1){
+                        on_init()
+                    }else{
+                        on_error(e)
+                    }
                 });
             }catch(e){
                 on_error(e)
@@ -143,6 +171,7 @@
 
 <body class="ly-no-select">
     <div id="preloader">
+        <div class="text">asdf</div>
         <div class="jumper">
             <div></div>
             <div></div>

@@ -44,3 +44,11 @@ impl From<rusqlite::Error> for Error {
         }
     }
 }
+impl From<std::io::Error> for Error {
+    fn from(error: std::io::Error) -> Self {
+        Error {
+            code:500,
+            msg: error.to_string(),
+        }
+    }
+}
