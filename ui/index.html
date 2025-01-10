@@ -121,11 +121,14 @@
                 document.getElementById("preloader").style.color = "red"
             });
         }
-        document.addEventListener("DOMContentLoaded", document_ready);
+        document.addEventListener("DOMContentLoaded", ()=>{ 
+            document.body.addEventListener("mousedown", start_dragging);
+            document_ready();
+        });
     </script>
 </head>
 
-<body class="ly-no-select" onmousedown="start_dragging()">
+<body class="ly-no-select">
     <div id="preloader">
         <div class="jumper">
             <div></div>
