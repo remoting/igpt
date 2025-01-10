@@ -109,7 +109,7 @@
             return window.__TAURI_INTERNALS__.invoke(cmd, args, options);
         }
         function start_dragging(){
-            invoke('plugin:window|start_dragging', {
+            window.__TAURI_INTERNALS__.invoke('plugin:window|start_dragging', {
                 label: "main"
             });
         }
