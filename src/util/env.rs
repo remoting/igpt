@@ -19,8 +19,9 @@ pub fn set_app_handle(app_handle: tauri::AppHandle) {
 
 pub fn document_dir() -> PathBuf {
     #[cfg(test)]
-    {
-        PathBuf::from("/Users/lanren/Documents/igpt")
+    {     
+        let path = dirs::document_dir().unwrap();
+        path.join(env!("CARGO_PKG_NAME"))
     }
     #[cfg(not(test))]
     {
@@ -31,8 +32,7 @@ pub fn document_dir() -> PathBuf {
                     // 检查是否是 mobile，如果不是，则在 doc_dir 后面添加 "igpt"
                     #[cfg(not(mobile))]
                     {
-                        let version = env!("CARGO_PKG_VERSION");
-                        doc_dir = doc_dir.join("igpt");
+                        doc_dir = doc_dir.join(env!("CARGO_PKG_NAME"));
                     }
                     if !doc_dir.exists() {
                         if let Err(e) = fs::create_dir_all(&doc_dir) {

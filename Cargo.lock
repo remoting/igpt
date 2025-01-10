@@ -1785,6 +1785,7 @@ dependencies = [
  "base64 0.22.1",
  "chrono",
  "cocoa",
+ "dirs",
  "lazy_static",
  "log",
  "log4rs",

@@ -13,12 +13,6 @@ use crate::util::error::Error;
 use mime_guess::from_path;
 use std::path::PathBuf;
 use crate::db::sqlite;
-//let mut resp = ResponseBuilder::new();
-//let mut resp = ResponseBuilder::new();
-// let mut resp = ResponseBuilder::new()
-//                 .status(StatusCode::INTERNAL_SERVER_ERROR)
-//                 .header(CONTENT_TYPE, "text/plain")
-//                 .body("e.to_string()".as_bytes().to_vec()).unwrap();
 
 pub fn get_http_response(request: Request<Vec<u8>>) -> Response<Vec<u8>> {
     let mut _path = request.uri().path();

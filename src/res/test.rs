@@ -3,7 +3,7 @@
 mod tests {
     use std::path::PathBuf;
 
-    use crate::res::app_version_upgrade;
+    use crate::{res::app_version_upgrade, util::env};
 
     // 导入父模块的所有项，使得测试模块可以访问它们
     use super::*;
@@ -22,5 +22,9 @@ mod tests {
     fn test_upgrade() -> Result<(), crate::util::error::Error> {
         app_version_upgrade("v1.0.0", "https://www.keeyuu.com/version/v1.0.0.zip")
     }
- 
+    #[test]
+    fn test() -> Result<(), crate::util::error::Error> {
+        env::document_dir();
+        Ok(())
+    }
 }
