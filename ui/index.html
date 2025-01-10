@@ -20,6 +20,12 @@
             user-select: none;
             -webkit-user-select: none;
         }
+        .ly-on-error {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
         #preloader {
             overflow: hidden;
@@ -113,13 +119,20 @@
                 label: "main"
             });
         }
+        function on_error(e){
+            document.getElementById("preloader").innerHTML = "<div class='ly-on-error'><pre>"+e+"<pre></div>"
+            document.getElementById("preloader").style.color = "red"
+        }
         function document_ready(){
-            window.__TAURI_INTERNALS__.invoke("ui_version").then((version) => {
-                window.location.href = "keeyuu://localhost/" + version + "/"
-            }).catch(e => {
-                document.getElementById("preloader").innerHTML = "error:"+e
-                document.getElementById("preloader").style.color = "red"
-            });
+            try{
+                window.__TAURI_INTERNALS__.invoke("ui_version").then((version) => {
+                    window.location.href = "keeyuu://localhost/" + version + "/"
+                }).catch(e => {
+                    on_error(e)
+                });
+            }catch(e){
+                on_error(e)
+            }
         }
         document.addEventListener("DOMContentLoaded", ()=>{ 
             document.body.addEventListener("mousedown", start_dragging);
