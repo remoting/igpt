@@ -38,7 +38,8 @@ fn sanitize_identifier(identifier: &str) -> String {
         .to_string()
 }
 fn parse_create_table_statement(statement: &str) -> Table {
-    let table_name_regex = Regex::new(r#"(?i)CREATE TABLE\s+"?([^".\s]+)"?(?:\.\s*"([^"\s]+)")?"#).unwrap();
+    let table_name_regex =
+        Regex::new(r#"(?i)CREATE TABLE\s+"?([^".\s]+)"?(?:\.\s*"([^"\s]+)")?"#).unwrap();
     //let table_name_regex = Regex::new(r#"CREATE TABLE\s+"?([^".\s]+)"?(?:\.\s*"([^"\s]+)")?"#).unwrap();
     let column_definition_regex = Regex::new(r"\(([^)]+)\)").unwrap();
     //let column_definition_regex = Regex::new(r"\(([^)]+)\)").unwrap();
@@ -66,7 +67,9 @@ fn parse_create_table_statement(statement: &str) -> Table {
             if name.is_empty() {
                 return false;
             }
-            if name.to_uppercase().starts_with("PRIMARY KEY") || name.to_uppercase().starts_with("UNIQUE"){
+            if name.to_uppercase().starts_with("PRIMARY KEY")
+                || name.to_uppercase().starts_with("UNIQUE")
+            {
                 return false;
             }
             true

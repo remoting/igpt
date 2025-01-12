@@ -1,5 +1,5 @@
-use std::fmt;
 use serde::Serialize;
+use std::fmt;
 
 #[derive(Debug, Serialize)]
 pub struct Error {
@@ -26,11 +26,11 @@ impl fmt::Display for Error {
 
 // 实现 std::error::Error trait
 impl std::error::Error for Error {}
- 
+
 impl From<Box<dyn std::error::Error>> for Error {
     fn from(error: Box<dyn std::error::Error>) -> Self {
         Error {
-            code:500,
+            code: 500,
             msg: error.to_string(),
         }
     }
@@ -39,7 +39,7 @@ impl From<Box<dyn std::error::Error>> for Error {
 impl From<rusqlite::Error> for Error {
     fn from(error: rusqlite::Error) -> Self {
         Error {
-            code:500,
+            code: 500,
             msg: error.to_string(),
         }
     }
@@ -47,7 +47,7 @@ impl From<rusqlite::Error> for Error {
 impl From<std::io::Error> for Error {
     fn from(error: std::io::Error) -> Self {
         Error {
-            code:500,
+            code: 500,
             msg: error.to_string(),
         }
     }

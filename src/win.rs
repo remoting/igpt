@@ -13,12 +13,15 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         .build()?;
 
     app.set_menu(menu)?;
- 
 
-    let init_script = format!(r#"
+    let init_script = format!(
+        r#"
         window.__LY_SDK__ = {{ platform: '{}', arch: '{}', version: '{}' }};
-    "#, env::get_plaform(), env::get_arch(), env::get_version());
-
+    "#,
+        env::get_plaform(),
+        env::get_arch(),
+        env::get_version()
+    );
 
     let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .inner_size(800.0, 600.0)

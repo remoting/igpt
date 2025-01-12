@@ -19,7 +19,7 @@ pub fn set_app_handle(app_handle: tauri::AppHandle) {
 
 pub fn document_dir() -> PathBuf {
     #[cfg(test)]
-    {     
+    {
         let path = dirs::document_dir().unwrap();
         path.join(env!("CARGO_PKG_NAME"))
     }
@@ -85,7 +85,7 @@ pub fn get_plaform() -> String {
 pub fn get_arch() -> String {
     let arch = std::env::consts::ARCH;
     return arch.to_string();
-} 
+}
 pub fn get_version() -> String {
     let version = env!("CARGO_PKG_VERSION");
     return version.to_string();

@@ -1,4 +1,3 @@
-
 #[cfg(test)]
 mod tests {
     use std::path::PathBuf;
@@ -11,12 +10,12 @@ mod tests {
     #[test]
     fn test_add() {
         let mut path = PathBuf::from("/Users/lanren/codeup/keeyuu/igpt/tauri");
-        println!("{}",path.to_string_lossy().to_string());
+        println!("{}", path.to_string_lossy().to_string());
         path.push("ui");
-        if path.is_dir() { 
+        if path.is_dir() {
             path.push("index.html");
         }
-        println!("x{}x",path.to_str().unwrap_or("")); 
+        println!("x{}x", path.to_str().unwrap_or(""));
     }
     #[test]
     fn test_upgrade() -> Result<(), crate::util::error::Error> {

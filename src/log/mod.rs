@@ -9,8 +9,8 @@ use log4rs::{
     config::{Appender, Config, Root},
     encode::pattern::PatternEncoder,
 };
-use serde_json::Value;
 use serde_json::to_string;
+use serde_json::Value;
 
 #[tauri::command(name = "log4rs_info")]
 pub fn log4rs_info(params: Option<Vec<Value>>) -> Result<Value, Error> {
@@ -31,7 +31,8 @@ pub fn log4rs_warn(params: Option<Vec<Value>>) -> Result<Value, Error> {
 pub fn log_message(params: Option<Vec<Value>>) -> String {
     if let Some(values) = params {
         // 序列化每个值并用逗号拼接
-        let serialized_values: Vec<String> = values.iter()
+        let serialized_values: Vec<String> = values
+            .iter()
             .filter_map(|value| to_string(value).ok()) // 序列化每个值，过滤掉失败的情况
             .collect();
 

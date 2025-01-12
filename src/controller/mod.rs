@@ -1,9 +1,9 @@
-use crate::util::json::Json;
 use crate::util::error::Error;
+use crate::util::json::Json;
 use log::info;
+pub mod base;
 mod home;
 mod user;
-pub mod base;
 
 // 获取命令注册表的命令名
 #[tauri::command]
@@ -36,10 +36,9 @@ pub async fn invoke_dynamic_command(name: String, args: Json) -> Result<Json, Er
                 resp.set_int("code", e.code.into());
                 resp.set_str("msg", &e.msg);
                 Ok(resp)
-            } 
+            }
         }
     } else {
-        Err(Error::new(404, "Command not found")) 
+        Err(Error::new(404, "Command not found"))
     }
 }
-

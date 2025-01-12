@@ -1,7 +1,7 @@
-pub mod sqlite;
 mod migrate;
+pub mod sqlite;
 use crate::util::json::Json;
-use serde_json::{Value,json};
+use serde_json::{json, Value};
 
 use super::util::error::Error;
 use lazy_static::lazy_static;
@@ -42,7 +42,7 @@ pub fn sqlite_query(sql: &str, params: Option<Vec<Value>>) -> Result<Value, Erro
 pub fn sqlite_migrate(sql: &str, _params: Option<Vec<Value>>) -> Result<Value, Error> {
     let conn = sqlite::get_conn()?;
     migrate::update_database_structure(&conn, sql)?;
-    Ok(json!("ok")) 
+    Ok(json!("ok"))
 }
 
 pub fn config(key: &str) -> String {

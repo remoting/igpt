@@ -8,7 +8,7 @@ pub mod win;
 pub fn run() {
     lazy_static::initialize(&crate::controller::base::INIT);
 
-    let mut builder = tauri::Builder::default();
+    let mut builder = tauri::Builder::default().plugin(tauri_plugin_clipboard_manager::init());
 
     builder = builder
         .setup(|app| {
@@ -18,6 +18,7 @@ pub fn run() {
             win::setup_window(app)?;
             Ok(())
         })
+        .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_http::init());
 
     builder

@@ -4,9 +4,9 @@ use lazy_static::lazy_static;
 use serde::Serialize;
 use std::collections::HashMap;
 use std::sync::Mutex;
-pub type CommandHandler = Box<dyn Fn(Json) -> Result<Json,Error> + Send + 'static>;
+pub type CommandHandler = Box<dyn Fn(Json) -> Result<Json, Error> + Send + 'static>;
 
-#[derive(Serialize)] 
+#[derive(Serialize)]
 pub struct Response {
     code: i32,
     msg: String,
@@ -14,10 +14,11 @@ pub struct Response {
 }
 // 定义一个全局的命令注册表
 lazy_static! {
-    pub static ref COMMAND_REGISTRY: Mutex<HashMap<String, CommandHandler>> = Mutex::new(HashMap::new()); 
+    pub static ref COMMAND_REGISTRY: Mutex<HashMap<String, CommandHandler>> =
+        Mutex::new(HashMap::new());
     pub(crate) static ref INIT: () = {
-         lazy_static::initialize(&crate::controller::home::HANDLER_INIT);
-         lazy_static::initialize(&crate::controller::user::HANDLER_INIT);
+        lazy_static::initialize(&crate::controller::home::HANDLER_INIT);
+        lazy_static::initialize(&crate::controller::user::HANDLER_INIT);
     };
 }
 

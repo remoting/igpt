@@ -1,8 +1,8 @@
 use super::*;
 use log::info;
-use std::sync::Once;
-use std::io::Write;
 use rusqlite::params;
+use std::io::Write;
+use std::sync::Once;
 
 static INIT: Once = Once::new();
 
@@ -39,12 +39,12 @@ mod tests {
             Err(e) => info!("{}", e.msg),
         }
         println!("test_add");
-    } 
+    }
     #[test]
     fn test_add_negative() -> Result<(), Box<dyn std::error::Error>> {
         crate::log::init_log4rs();
-        crate::db::load_config(); 
-        
+        crate::db::load_config();
+
         let conn = crate::db::sqlite::get_conn()?;
 
         let multi_line_text = r#"
@@ -98,20 +98,20 @@ ON "无标题" (
         
         "#;
 
-        crate::db::migrate::update_database_structure(&conn,multi_line_text)?;
+        crate::db::migrate::update_database_structure(&conn, multi_line_text)?;
         Ok(())
     }
 
     #[test]
     fn xx() -> Result<(), Box<dyn std::error::Error>> {
-      crate::log::init_log4rs();
-      crate::db::load_config(); 
-      
-     // let conn = crate::db::sqlite::get_conn()?;
-        
-      let  rows = sqlite_query("PRAGMA compile_options;", None);
+        crate::log::init_log4rs();
+        crate::db::load_config();
 
-      println!("{:?}",rows);  
-      Ok(())
+        // let conn = crate::db::sqlite::get_conn()?;
+
+        let rows = sqlite_query("PRAGMA compile_options;", None);
+
+        println!("{:?}", rows);
+        Ok(())
     }
-  }
+}
