@@ -4,15 +4,15 @@ use tauri::{App, WebviewUrl, WebviewWindowBuilder};
 
 use crate::util::env;
 pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
-    let handle = app.handle();
-    let toggle = MenuItemBuilder::with_id("toggle", "Toggle").build(app)?;
-    let check = CheckMenuItemBuilder::new("Mark").build(app)?;
-    let menu = MenuBuilder::new(handle)
-        .items(&[&toggle, &check])
-        //.icon("show-app", "Show App", app.default_window_icon().cloned().unwrap())
-        .build()?;
+    // let handle = app.handle();
+    // let toggle = MenuItemBuilder::with_id("toggle", "Toggle").build(app)?;
+    // let check = CheckMenuItemBuilder::new("Mark").build(app)?;
+    // let menu = MenuBuilder::new(handle)
+    //     .items(&[&toggle, &check])
+    //     //.icon("show-app", "Show App", app.default_window_icon().cloned().unwrap())
+    //     .build()?;
 
-    app.set_menu(menu)?;
+    // app.set_menu(menu)?;
 
     let init_script = format!(
         r#"
