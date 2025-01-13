@@ -1,6 +1,6 @@
 use std::error::Error;
 use tauri::menu::{CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder};
-use tauri::{App, WebviewUrl, WebviewWindowBuilder};
+use tauri::{App, Manager, WebviewUrl, WebviewWindowBuilder};
 
 use crate::util::env;
 pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
@@ -26,15 +26,18 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
     let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
         .inner_size(800.0, 600.0)
         .initialization_script(&init_script)
+        .devtools(true)
         .title("");
     //.decorations(false);
 
     #[cfg(target_os = "macos")]
     {
+
         use cocoa::appkit::{NSColor, NSWindow};
         use cocoa::base::YES;
         use cocoa::base::{id, nil};
         let window = win_builder.build().unwrap();
+        //let window = app.get_webview_window("main").unwrap();
         let ns_window = window.ns_window().unwrap() as id;
         unsafe {
             ns_window.setTitlebarAppearsTransparent_(YES);
