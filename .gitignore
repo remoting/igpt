@@ -8,3 +8,6 @@
 database.db
 logs
 output.log
+icons/i*
+icons/s*
+icons/a*

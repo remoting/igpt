@@ -10,6 +10,8 @@
 ~~~
 
 ~~~
+      cargo tauri icon ./icons/icon_512x512_w.png
+
       cargo tauri build
 ~~~
 
