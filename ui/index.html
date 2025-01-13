@@ -122,41 +122,20 @@
         }
     </style>
     <script type="module">
-        async function invoke(cmd, args = {}, options) {
-            return window.__TAURI_INTERNALS__.invoke(cmd, args, options);
-        }
         function start_dragging(){
             window.__TAURI_INTERNALS__.invoke('plugin:window|start_dragging', {
                 label: "main"
             });
         }
-        function start(version){
-            window.location.href = "keeyuu://localhost/" + version + "/"
-        }
         function on_error(e){
             document.getElementById("preloader").innerHTML = "<div class='ly-on-error'><pre>"+e+"<pre></div>"
-        }
-        function on_init(){
-            document.getElementById("preloader").querySelector(".text").innerHTML = "正在初始化 ..."
-            window.__TAURI_INTERNALS__.invoke('app_upgrade', {
-                version: "v1.0.0",
-                url: "https://xxx.xxx.xxx/xxx/xxx.zip"
-            }).then((version)=>{
-                start(version)
-            }).catch(e=>{
-                on_error(e)
-            });
         }
         function document_ready(){
             try{
                 window.__TAURI_INTERNALS__.invoke("app_version").then((version) => {
-                    start(version)
+                    window.location.href = "keeyuu://localhost/" + version + "/"
                 }).catch(e => {
-                    if (e.code != null && e.code === 1){
-                        on_init()
-                    }else{
-                        on_error(e)
-                    }
+                    on_error(e)
                 });
             }catch(e){
                 on_error(e)

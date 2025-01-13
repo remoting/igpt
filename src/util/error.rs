@@ -52,3 +52,11 @@ impl From<std::io::Error> for Error {
         }
     }
 }
+impl From<reqwest::Error> for Error {
+    fn from(error: reqwest::Error) -> Self {
+        Error {
+            code: 500,
+            msg: error.to_string(),
+        }
+    }
+}
