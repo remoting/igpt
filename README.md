@@ -10,7 +10,7 @@
 ~~~
 
 ~~~
-      cargo tauri icon ./icons/luotuo_w.png
+      cargo tauri icon --ios-color=transparent ./icons/luotuo.png
 
       cargo tauri build
 ~~~
