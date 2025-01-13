@@ -66,6 +66,15 @@ pub fn app_version() -> Result<String, Error> {
     if version == "" {
         version = app_version_init()?
     }
+    
+    let mut path = document_dir(); 
+    path.push(version.clone());
+    if !path.exists() || !path.is_dir() {
+        let url = super::db::config("ui_url");
+        if url != "" {
+            app_version_upgrade(&version, &url)?;
+        }
+    }
     Ok(version)
 }
 
