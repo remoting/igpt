@@ -1,8 +1,8 @@
 use std::fs::File;
 use std::io::Read;
+use tauri::http::status::StatusCode;
 use tauri::http::Request;
 use tauri::http::Response;
-use tauri::http::{header::*, response::Builder as ResponseBuilder, status::StatusCode};
 
 use crate::db;
 use crate::db::sqlite;
@@ -23,22 +23,34 @@ pub fn get_http_response(request: Request<Vec<u8>>) -> Response<Vec<u8>> {
         if path.is_dir() {
             path.push("index.html");
         }
-        if let Ok(mut file) = File::open(&path) {
-            let mut contents: Vec<u8> = Vec::new();
-            let mime_type = from_path(&path).first_or_octet_stream();
-            if let Ok(_e) = file.read_to_end(&mut contents) {
-                return Response::builder()
-                    .status(StatusCode::OK)
-                    .header("Content-Type", mime_type.as_ref())
-                    .header("Content-Length", _e.to_string())
-                    .body(contents)
-                    .unwrap_or_default();
+        match File::open(&path) {
+            Ok(mut file) => {
+                let mut contents: Vec<u8> = Vec::new();
+                let mime_type = from_path(&path).first_or_octet_stream();
+                match file.read_to_end(&mut contents) {
+                    Ok(_e) => {
+                        Response::builder()
+                        .status(StatusCode::OK)
+                        .header("Content-Type", mime_type.as_ref())
+                        .header("Content-Length", _e.to_string())
+                        .body(contents)
+                        .unwrap_or_default()
+                    }
+                    Err(_e) => {
+                        Response::builder()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .body(format!("Failed to read file: {}", _e).into())
+                        .unwrap_or_default()
+                    }
+                }
+            }
+            Err(err) => {
+                Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body(format!("Failed to open file: {}", err).into())
+                .unwrap_or_default()
             }
         }
-        Response::builder()
-            .status(404)
-            .body("Not Found".into())
-            .unwrap_or_default()
     } else {
         Response::builder()
             .status(404)
@@ -73,7 +85,7 @@ fn app_version_upgrade(version: &str, url: &str) -> Result<(), Error> {
     // 版本目录
     let mut vpath = document_dir();
     vpath.push(format!("{}", version));
-    if (vpath.exists()) {
+    if vpath.exists() {
         std::fs::remove_dir_all(&vpath)?;
     }
     // 解压
