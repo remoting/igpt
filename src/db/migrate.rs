@@ -41,7 +41,8 @@ fn parse_create_table_statement(statement: &str) -> Table {
     let table_name_regex =
         Regex::new(r#"(?i)CREATE TABLE\s+"?([^".\s]+)"?(?:\.\s*"([^"\s]+)")?"#).unwrap();
     //let table_name_regex = Regex::new(r#"CREATE TABLE\s+"?([^".\s]+)"?(?:\.\s*"([^"\s]+)")?"#).unwrap();
-    let column_definition_regex = Regex::new(r"\(([^)]+)\)").unwrap();
+    //let column_definition_regex = Regex::new(r"\(([^)]+)\)").unwrap();
+    let column_definition_regex = Regex::new(r"\((?s)(.*)\)").unwrap(); // 使用 (?s) 让 . 匹配换行符
     //let column_definition_regex = Regex::new(r"\(([^)]+)\)").unwrap();
     let table_name = if let Some(caps) = table_name_regex.captures(statement) {
         if let Some(matched_name) = caps.get(2) {
@@ -60,22 +61,19 @@ fn parse_create_table_statement(statement: &str) -> Table {
         .unwrap()
         .as_str();
 
-    let columns = column_definitions
-        .split(',')
-        .filter(|def| {
-            let name = def.trim();
-            if name.is_empty() {
-                return false;
+    let mut columns: Vec<Column> = Vec::new();
+    let mut primary_key_columns: Vec<String> = Vec::new();
+
+    for def in column_definitions.split(',').map(|s| s.trim()) {
+        if def.to_uppercase().starts_with("UNIQUE") {
+        }else if def.to_uppercase().starts_with("PRIMARY KEY") {
+            let pk_regex = Regex::new(r"PRIMARY KEY\s*\(([^)]+)\)").unwrap();
+            if let Some(caps) = pk_regex.captures(def) {
+                let pk_columns = caps.get(1).unwrap().as_str().split(',').map(|s| sanitize_identifier(s.trim()));
+                primary_key_columns.extend(pk_columns);
             }
-            if name.to_uppercase().starts_with("PRIMARY KEY")
-                || name.to_uppercase().starts_with("UNIQUE")
-            {
-                return false;
-            }
-            true
-        })
-        .map(|def| {
-            let parts: Vec<&str> = def.trim().split_whitespace().collect();
+        } else {
+            let parts: Vec<&str> = def.split_whitespace().collect();
             let name = sanitize_identifier(parts[0]);
             let column_type = parts[1].to_string();
             let constraints = parts[2..].join(" ");
@@ -87,16 +85,61 @@ fn parse_create_table_statement(statement: &str) -> Table {
                 .captures(&constraints)
                 .map(|caps| caps.get(1).unwrap().as_str().to_string());
 
-            Column {
+            columns.push(Column {
                 name,
                 column_type,
                 is_primary_key,
                 is_auto_increment,
                 is_not_null,
                 default_value,
-            }
-        })
-        .collect();
+            });
+        }
+    }
+
+    // Set primary_key flag for columns that are part of the primary key
+    for pk_column in primary_key_columns {
+        if let Some(column) = columns.iter_mut().find(|col| col.name == pk_column) {
+            column.is_primary_key = true;
+        }
+    }
+
+    // let columns = column_definitions
+    //     .split(',')
+    //     .filter(|def| {
+    //         let name = def.trim();
+    //         if name.is_empty() {
+    //             return false;
+    //         }
+    //         if name.to_uppercase().starts_with("PRIMARY KEY")
+    //             || name.to_uppercase().starts_with("UNIQUE")
+    //         {
+    //             return false;
+    //         }
+    //         true
+    //     })
+    //     .map(|def| {
+    //         let parts: Vec<&str> = def.trim().split_whitespace().collect();
+    //         let name = sanitize_identifier(parts[0]);
+    //         let column_type = parts[1].to_string();
+    //         let constraints = parts[2..].join(" ");
+    //         let is_primary_key = constraints.contains("PRIMARY KEY");
+    //         let is_auto_increment = constraints.contains("AUTOINCREMENT");
+    //         let is_not_null = constraints.contains("NOT NULL");
+    //         let default_value = Regex::new(r"DEFAULT\s+(\S+)")
+    //             .unwrap()
+    //             .captures(&constraints)
+    //             .map(|caps| caps.get(1).unwrap().as_str().to_string());
+
+    //         Column {
+    //             name,
+    //             column_type,
+    //             is_primary_key,
+    //             is_auto_increment,
+    //             is_not_null,
+    //             default_value,
+    //         }
+    //     })
+    //     .collect();
 
     Table {
         name: table_name.to_string(),
@@ -276,7 +319,7 @@ pub fn update_database_structure(
                 if db_column.is_none() {
                     // 字段不存在，添加字段
                     let stmt = format!(
-                        "ALTER TABLE {} ADD COLUMN {} {} {} {}",
+                        "ALTER TABLE {} ADD COLUMN \"{}\" {} {} {}",
                         sql_table.name,
                         sql_column.name,
                         sql_column.column_type,
