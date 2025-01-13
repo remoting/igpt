@@ -82,7 +82,7 @@ fn app_version_init() -> Result<String,Error>{
         let version = info.get_str("version");
         let url = info.get_str("url");
         app_version_upgrade(&version, &url)?;
-        Ok(info.get_str("version"))
+        Ok(version)
     }else{
         Err(Error::new(1, "msg"))
     } 
