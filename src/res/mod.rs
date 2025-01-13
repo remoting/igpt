@@ -86,8 +86,8 @@ fn app_version_upgrade(version: &str, url: &str) -> Result<(), Error> {
     db::sqlite_migrate(&sql, None)?;
     // 更新数据库
     let params = vec![
-        serde_json::Value::String(version.to_string()),
         serde_json::Value::String("ui_version".to_string()),
+        serde_json::Value::String(version.to_string()),
     ];
     sqlite::exec("INSERT INTO config (conf_key, conf_val) VALUES (?, ?) ON CONFLICT(conf_key) DO UPDATE SET conf_val = excluded.conf_val",  Some(params))?;
     // 更新缓存数据
