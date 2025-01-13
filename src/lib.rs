@@ -1,3 +1,5 @@
+use tauri::Manager;
+
 pub mod controller;
 pub mod db;
 pub mod log;
@@ -7,18 +9,23 @@ pub mod win;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     lazy_static::initialize(&crate::controller::base::INIT);
+    //let devtools = tauri_plugin_devtools::init(); // initialize the plugin as early as possible
 
-    let mut builder = tauri::Builder::default().plugin(tauri_plugin_clipboard_manager::init());
+    let mut builder = tauri::Builder::default();
 
     builder = builder
         .setup(|app| {
+ 
             util::env::set_app_handle(app.handle().clone());
             log::init_log4rs();
             db::load_config();
             win::setup_window(app)?;
+
+
             Ok(())
         })
-        .plugin(tauri_plugin_clipboard_manager::init())
+        // .plugin(tauri_plugin_clipboard_manager::init())
+        // .plugin(tauri_plugin_devtools::init())
         .plugin(tauri_plugin_http::init());
 
     builder

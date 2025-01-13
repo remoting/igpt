@@ -36,7 +36,13 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         use cocoa::appkit::{NSColor, NSWindow};
         use cocoa::base::YES;
         use cocoa::base::{id, nil};
-        let window = win_builder.build().unwrap();
+        let window = win_builder.build().unwrap(); 
+        window.open_devtools();
+        // #[cfg(debug_assertions)] // only include this code on debug builds
+        // { 
+        //   window.open_devtools();
+        //   window.close_devtools();
+        // }
         //let window = app.get_webview_window("main").unwrap();
         let ns_window = window.ns_window().unwrap() as id;
         unsafe {

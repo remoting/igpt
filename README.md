@@ -7,6 +7,14 @@
         "fullscreen": false,
         "decorations": false
       }
+
+
+          // "clipboard-manager:allow-write-text", 
+    // "clipboard-manager:allow-write-html",
+    // "clipboard-manager:allow-write-image",
+    // "clipboard-manager:allow-clear",
+    // "clipboard-manager:allow-read-image",
+    // "clipboard-manager:allow-read-text",
 ~~~
 
 ~~~

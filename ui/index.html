@@ -141,16 +141,22 @@
                 on_error(e)
             }
         }
+        function open_devtools() {
+            // window.__TAURI_INTERNALS__.window.getCurrent().then(window => {
+            //     window.openDevTools();
+            // });
+        }
         document.addEventListener("DOMContentLoaded", ()=>{ 
             document.body.addEventListener("mousedown", start_dragging);
-            document_ready();
+            //document_ready();
+            document.body.addEventListener("dblclick",open_devtools)
         });
     </script>
 </head>
 
 <body class="ly-no-select">
     <div id="preloader">
-        <div class="text">asdf</div>
+        <div class="text"></div>
         <div class="jumper">
             <div></div>
             <div></div>
