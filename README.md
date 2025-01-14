@@ -7,7 +7,16 @@
         "fullscreen": false,
         "decorations": false
       }
-
+   // {
+      //   "title": "",
+      //   "width": 800,
+      //   "height": 600,
+      //   "resizable": true,
+      //   "fullscreen": false,
+      //   "decorations": false,
+      //   "transparent": true,
+      //   "devtools": true
+      // }
 
           // "clipboard-manager:allow-write-text", 
     // "clipboard-manager:allow-write-html",
