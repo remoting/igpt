@@ -142,14 +142,20 @@
             }
         }
         function open_devtools() {
-            // window.__TAURI_INTERNALS__.window.getCurrent().then(window => {
-            //     window.openDevTools();
-            // });
+            try{
+                window.__TAURI_INTERNALS__.invoke("app_debugger").then((r) => {
+                    
+                }).catch(e => {
+                    on_error(e)
+                });
+            }catch(e){
+                on_error(e)
+            }
         }
         document.addEventListener("DOMContentLoaded", ()=>{ 
             document.body.addEventListener("mousedown", start_dragging);
-            //document_ready();
             document.body.addEventListener("dblclick",open_devtools)
+            document_ready();
         });
     </script>
 </head>
