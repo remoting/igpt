@@ -13,14 +13,18 @@
     "windows": [
 
     ],
-    "security": {
-      "csp": null
+    "security": { 
+      "csp": "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: filesystem: ws: wss: http: https:;"
     }
   },
   "bundle": {
     "active": true,
     "targets": "all",
     "category": "Utility",
+    "iOS": {
+      "minimumSystemVersion": "13.0",
+      "developmentTeam": "keeyuu"
+    },
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
