@@ -41,7 +41,8 @@ pub fn run() {
             log::log4rs_info,
             log::log4rs_warn,
             res::app_version,
-            res::app_upgrade
+            res::app_upgrade,
+            res::app_debugger
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

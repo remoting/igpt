@@ -4,6 +4,7 @@ use tauri::http::status::StatusCode;
 use tauri::http::Request;
 use tauri::http::Response;
 use reqwest::blocking::get;
+use tauri::Manager;
 use crate::db;
 use crate::db::sqlite;
 use crate::util;
@@ -83,6 +84,14 @@ pub fn app_upgrade(version: &str, url: &str) -> Result<String, Error> {
     app_version_upgrade(version, url)?;
     app_version()
 }
+#[tauri::command(name = "app_debugger")]
+pub fn app_debugger(app_handle: tauri::AppHandle) -> Result<String, Error> {
+    if let Some(window) = app_handle.get_webview_window("main") {
+        window.open_devtools()
+    }
+    Ok("ok".to_string())
+}
+ 
 fn app_version_init() -> Result<String,Error>{
     let latest = "https://www.keeyuu.com/app/igpt/latest.json";
     let response = get(latest)?;

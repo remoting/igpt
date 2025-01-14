@@ -37,7 +37,7 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         use cocoa::base::YES;
         use cocoa::base::{id, nil};
         let window = win_builder.build().unwrap(); 
-        window.open_devtools();
+        //window.open_devtools();
         // #[cfg(debug_assertions)] // only include this code on debug builds
         // { 
         //   window.open_devtools();
