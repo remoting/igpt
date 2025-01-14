@@ -1,19 +1,8 @@
 use std::error::Error;
-use tauri::menu::{CheckMenuItemBuilder, MenuBuilder, MenuItemBuilder};
 use tauri::{App, Manager, WebviewUrl, WebviewWindowBuilder};
 
 use crate::util::env;
 pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
-    // let handle = app.handle();
-    // let toggle = MenuItemBuilder::with_id("toggle", "Toggle").build(app)?;
-    // let check = CheckMenuItemBuilder::new("Mark").build(app)?;
-    // let menu = MenuBuilder::new(handle)
-    //     .items(&[&toggle, &check])
-    //     //.icon("show-app", "Show App", app.default_window_icon().cloned().unwrap())
-    //     .build()?;
-
-    // app.set_menu(menu)?;
-
     let init_script = format!(
         r#"
         window.__LY_SDK__ = {{ platform: '{}', arch: '{}', version: '{}' }};
@@ -23,11 +12,17 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         env::get_version()
     );
 
-    let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+    let mut win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
+        .initialization_script(&init_script);
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    {
+        win_builder = win_builder
         .inner_size(800.0, 600.0)
-        .initialization_script(&init_script)
-        .devtools(true)
-        .title("");
+        .title("")
+        .devtools(true);
+    }
+
     //.decorations(false);
 
     #[cfg(target_os = "macos")]
