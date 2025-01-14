@@ -5,13 +5,22 @@
   "identifier": "com.keeyuu.igpt",
   "build": {
     "frontendDist": "./ui",
-    "devUrl": "http://127.0.0.1:5173",
+    "devUrl": "http://192.168.18.202:5173",
     "beforeDevCommand": "",
     "beforeBuildCommand": ""
   },
   "app": {
     "windows": [
-
+      {
+        "title": "",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true,
+        "devtools": true
+      }
     ],
     "security": { 
       "csp": "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: filesystem: ws: wss: http: https:;"
