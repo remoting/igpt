@@ -3,17 +3,6 @@ use tauri::{App, Manager,WebviewUrl,WebviewWindowBuilder};
 
 use crate::util::env;
 pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
-    let is_mobile = {
-        #[cfg(any(target_os = "ios", target_os = "android"))]
-        {
-            true
-        }
-        #[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
-        {
-            false
-        }
-    };
-
     let init_script = format!(
         r#"
         window.__LY_SDK__ = {{ platform: '{}', arch: '{}', version: '{}',is_mobile: {} }};
@@ -21,7 +10,7 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         env::get_plaform(),
         env::get_arch(),
         env::get_version(),
-        is_mobile
+        env::is_mobile()
     );
     let _win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
           .initialization_script(&init_script)
@@ -83,7 +72,7 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
     {
 
     }
-    
+
     #[cfg(target_os = "linux")]
     {
 

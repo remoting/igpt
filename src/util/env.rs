@@ -90,3 +90,13 @@ pub fn get_version() -> String {
     let version = env!("CARGO_PKG_VERSION");
     return version.to_string();
 }
+pub fn is_mobile() -> bool {
+    #[cfg(any(target_os = "ios", target_os = "android"))]
+    {
+        true
+    }
+    #[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
+    {
+        false
+    }
+}
