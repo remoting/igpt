@@ -79,5 +79,14 @@ pub fn setup_window(app: &App) -> Result<(), Box<dyn Error>> {
         }
     }
 
+    #[cfg(target_os = "windows")]
+    {
+
+    }
+    
+    #[cfg(target_os = "linux")]
+    {
+
+    }
     Ok(())
 }
